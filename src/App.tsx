@@ -1,5 +1,7 @@
+import AppRouter from './router/AppRouter';
+
 function App() {
-  return <h1>React + Webpack + TS</h1>;
+  return <AppRouter />;
 }
 
 export default App;
