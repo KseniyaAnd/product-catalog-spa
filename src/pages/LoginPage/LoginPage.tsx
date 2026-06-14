@@ -1,26 +1,41 @@
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../../features/auth/authSlice';
 import { useNavigate } from 'react-router-dom';
+import { useLoginMutation } from '../../features/auth/authApi';
 
 export default function LoginPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const [loginUser] = useLoginMutation();
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
+  const handleUsernameChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setUsername(e.target.value);
+  };
+
+  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+  };
+
   const login = async () => {
-    const res = await fetch('https://dummyjson.com/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password }),
-    });
+    try {
+      const data = await loginUser({
+        username,
+        password,
+      }).unwrap();
 
-    const data = await res.json();
+      const token = data.accessToken;
+      localStorage.setItem('token', token);
 
-    dispatch(setUser({ user: data, token: data.token }));
-    navigate('/products');
+      dispatch(setUser({ user: data, token: data.token }));
+      navigate('/products');
+    } catch (error) {
+      console.error('Login failed', error);
+    }
   };
 
   return (
@@ -29,12 +44,15 @@ export default function LoginPage() {
 
       <input
         placeholder="username"
-        onChange={(e) => setUsername(e.target.value)}
+        value={username}
+        onChange={handleUsernameChange}
       />
+
       <input
         placeholder="password"
         type="password"
-        onChange={(e) => setPassword(e.target.value)}
+        value={password}
+        onChange={handlePasswordChange}
       />
 
       <button onClick={login}>Login</button>

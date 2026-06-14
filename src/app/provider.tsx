@@ -1,6 +1,11 @@
+import { ReactNode } from 'react';
 import { Provider } from 'react-redux';
 import { store } from './store';
 
-export default function AppProvider(props: any) {
-  return <Provider store={store}>{props.children}</Provider>;
+interface AppProviderProps {
+  children: ReactNode;
+}
+
+export function AppProvider({ children }: AppProviderProps) {
+  return <Provider store={store}>{children}</Provider>;
 }
