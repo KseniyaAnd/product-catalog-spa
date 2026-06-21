@@ -32,7 +32,7 @@ export interface ProductInput {
 export const productsApi = createApi({
   reducerPath: 'productsApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://dummyjson.com/',
+    baseUrl: process.env.API_URL,
   }),
   tagTypes: ['Products'],
   endpoints: (builder) => ({

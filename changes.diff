@@ -1,0 +1,67 @@
+diff --git a/src/components/ProductCard/ProductCard.tsx b/src/components/ProductCard/ProductCard.tsx
+index d8f5ea9..d3ea878 100644
+--- a/src/components/ProductCard/ProductCard.tsx
++++ b/src/components/ProductCard/ProductCard.tsx
+@@ -7,8 +7,10 @@ type Props = {
+   deleting?: boolean;
+ };
+ 
++// не используй default export
+ export default function ProductCard({ product, onDelete, deleting }: Props) {
+   return (
++    // зачем тут className если стилей нет?
+     <article className="product-card">
+       <Link to={`/products/${product.id}`} className="product-card__link">
+         <img
+diff --git a/src/features/auth/authApi.ts b/src/features/auth/authApi.ts
+index 4b2a610..a941699 100644
+--- a/src/features/auth/authApi.ts
++++ b/src/features/auth/authApi.ts
+@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+ export const authApi = createApi({
+   reducerPath: 'authApi',
+   baseQuery: fetchBaseQuery({
+-    baseUrl: 'https://dummyjson.com',
++    baseUrl: 'https://dummyjson.com', // в env
+   }),
+   endpoints: (builder) => ({
+     login: builder.mutation({
+diff --git a/src/features/products/productsApi.ts b/src/features/products/productsApi.ts
+index 22b8050..99fe525 100644
+--- a/src/features/products/productsApi.ts
++++ b/src/features/products/productsApi.ts
+@@ -32,7 +32,7 @@ export interface ProductInput {
+ export const productsApi = createApi({
+   reducerPath: 'productsApi',
+   baseQuery: fetchBaseQuery({
+-    baseUrl: 'https://dummyjson.com/',
++    baseUrl: 'https://dummyjson.com/', // в env
+   }),
+   tagTypes: ['Products'],
+   endpoints: (builder) => ({
+diff --git a/src/pages/LoginPage/LoginPage.tsx b/src/pages/LoginPage/LoginPage.tsx
+index de08969..117af46 100644
+--- a/src/pages/LoginPage/LoginPage.tsx
++++ b/src/pages/LoginPage/LoginPage.tsx
+@@ -10,7 +10,7 @@ export default function LoginPage() {
+ 
+   const [loginUser] = useLoginMutation();
+ 
+-  const [username, setUsername] = useState('');
++  const [username, setUsername] = useState(''); // лучше явно типизировать useState<string>('')
+   const [password, setPassword] = useState('');
+ 
+   const handleUsernameChange = (e: ChangeEvent<HTMLInputElement>) => {
+diff --git a/src/router/AppRouter.tsx b/src/router/AppRouter.tsx
+index 46f7935..adae83f 100644
+--- a/src/router/AppRouter.tsx
++++ b/src/router/AppRouter.tsx
+@@ -18,6 +18,8 @@ function PrivateRoute() {
+   return token ? <Outlet /> : <Navigate to="/" replace />;
+ }
+ 
++// используй createBrowserRouter
++
+ export default function AppRouter() {
+   return (
+     <BrowserRouter>

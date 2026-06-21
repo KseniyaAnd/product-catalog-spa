@@ -7,9 +7,9 @@ type Props = {
   deleting?: boolean;
 };
 
-export default function ProductCard({ product, onDelete, deleting }: Props) {
+export function ProductCard({ product, onDelete, deleting }: Props) {
   return (
-    <article className="product-card">
+    <article>
       <Link to={`/products/${product.id}`} className="product-card__link">
         <img
           className="product-card__image"

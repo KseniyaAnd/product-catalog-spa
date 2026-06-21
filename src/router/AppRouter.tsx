@@ -1,10 +1,9 @@
 import { lazy, Suspense } from 'react';
 import {
-  BrowserRouter,
-  Routes,
-  Route,
+  createBrowserRouter,
+  RouterProvider,
   Navigate,
-  Outlet,
+  redirect,
 } from 'react-router-dom';
 
 const LoginPage = lazy(() => import('../pages/LoginPage/LoginPage'));
@@ -13,26 +12,51 @@ const ProductDetailsPage = lazy(
   () => import('../pages/ProductDetailsPage/ProductDetailsPage'),
 );
 
-function PrivateRoute() {
+function loginLoader() {
   const token = localStorage.getItem('token');
-  return token ? <Outlet /> : <Navigate to="/" replace />;
+  if (token) {
+    return redirect('/products');
+  }
+  return null;
 }
+
+function protectedLoader() {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    return redirect('/');
+  }
+  return null;
+}
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <LoginPage />,
+    loader: loginLoader,
+  },
+  {
+    loader: protectedLoader,
+    children: [
+      {
+        path: '/products',
+        element: <ProductsPage />,
+      },
+      {
+        path: '/products/:id',
+        element: <ProductDetailsPage />,
+      },
+    ],
+  },
+  {
+    path: '*',
+    element: <Navigate to="/" replace />,
+  },
+]);
 
 export default function AppRouter() {
   return (
-    <BrowserRouter>
-      <Suspense fallback={<div>Loading...</div>}>
-        <Routes>
-          <Route path="/" element={<LoginPage />} />
-
-          <Route element={<PrivateRoute />}>
-            <Route path="/products" element={<ProductsPage />} />
-            <Route path="/products/:id" element={<ProductDetailsPage />} />
-          </Route>
-
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </Suspense>
-    </BrowserRouter>
+    <Suspense fallback={<div>Loading...</div>}>
+      <RouterProvider router={router} />
+    </Suspense>
   );
 }

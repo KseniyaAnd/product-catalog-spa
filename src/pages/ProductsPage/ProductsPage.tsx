@@ -1,5 +1,5 @@
 import { FormEvent, useState } from 'react';
-import ProductCard from '../../components/ProductCard/ProductCard';
+import { ProductCard } from '../../components/ProductCard/ProductCard';
 import {
   useAddProductMutation,
   useDeleteProductMutation,
@@ -11,10 +11,10 @@ export default function ProductsPage() {
   const [addProduct, { isLoading: isAdding }] = useAddProductMutation();
   const [deleteProduct, { isLoading: isDeleting }] = useDeleteProductMutation();
 
-  const [title, setTitle] = useState('');
-  const [price, setPrice] = useState('');
-  const [description, setDescription] = useState('');
-  const [thumbnail, setThumbnail] = useState('');
+  const [title, setTitle] = useState<string>('');
+  const [price, setPrice] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
+  const [thumbnail, setThumbnail] = useState<string>('');
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
