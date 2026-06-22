@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react';
+import { SubmitEvent, useState } from 'react';
 import { ProductCard } from '../../components/ProductCard/ProductCard';
 import {
   useAddProductMutation,
@@ -32,7 +32,7 @@ export default function ProductsPage() {
     setThumbnail(e.target.value);
   };
 
-  const handleAddProduct = async (e: FormEvent) => {
+  const handleAddProduct = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     await addProduct({
